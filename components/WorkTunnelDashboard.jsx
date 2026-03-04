@@ -10,6 +10,8 @@ const WorkTunnelHome = () => {
   const [chatInput, setChatInput] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const rotatingItems = ['manage your time', 'todo list', 'stress', 'productivity'];
+  const [rotatingItemIndex, setRotatingItemIndex] = useState(0);
 
   const openLoginModal = () => {
     setAuthMode('login');
@@ -42,6 +44,14 @@ const WorkTunnelHome = () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const rotateInterval = setInterval(() => {
+      setRotatingItemIndex((prev) => (prev + 1) % rotatingItems.length);
+    }, 1800);
+
+    return () => clearInterval(rotateInterval);
+  }, [rotatingItems.length]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -93,6 +103,9 @@ const WorkTunnelHome = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus
             posuere velit aliquet. Donec ullamcorper nulla non metus auctor fringilla. Curabitur blandit tempus
             porttitor.
+          </p>
+          <p className="welcome-rotating-text">
+            <strong>{rotatingItems[rotatingItemIndex]}</strong>
           </p>
           <button type="button" className="home-ai-btn" onClick={openAiChat}>Ask from AI</button>
         </div>
