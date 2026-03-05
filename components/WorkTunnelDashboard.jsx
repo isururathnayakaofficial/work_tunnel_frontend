@@ -362,6 +362,9 @@ const WorkTunnelHome = () => {
                   <label htmlFor="signup-profession">Profession</label>
                   <input id="signup-profession" type="text" placeholder="Enter profession" required />
 
+                  <label htmlFor="signup-password">Password</label>
+                  <input id="signup-password" type="password" placeholder="Enter password" required />
+
                   <label htmlFor="signup-age">Age</label>
                   <input id="signup-age" type="number" placeholder="Enter age" min="1" required />
 
