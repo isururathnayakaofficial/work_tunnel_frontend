@@ -1,0 +1,347 @@
+/* TodoView specific styles: keeps todo page design isolated */
+.worktunnel .todo-section {
+  --todo-bg: #f6f8fc;
+  --todo-card: #ffffff;
+  --todo-border: #dbe3f1;
+  --todo-heading: #0f172a;
+  --todo-text: #334155;
+  --todo-muted: #64748b;
+  --todo-shadow: 0 12px 28px rgba(30, 41, 59, 0.08);
+  --todo-accent: #0f766e;
+  --todo-accent-strong: #115e59;
+  --todo-accent-soft: rgba(15, 118, 110, 0.12);
+
+  background:
+    radial-gradient(circle at 12% -18%, rgba(14, 165, 233, 0.16), transparent 42%),
+    radial-gradient(circle at 94% 10%, rgba(16, 185, 129, 0.13), transparent 36%),
+    var(--todo-bg);
+  border: 1px solid var(--todo-border);
+  border-radius: 1rem;
+  padding: 1.4rem;
+}
+
+.worktunnel-dark .todo-section {
+  --todo-bg: #0f172a;
+  --todo-card: #162337;
+  --todo-border: #26364d;
+  --todo-heading: #e2e8f0;
+  --todo-text: #cbd5e1;
+  --todo-muted: #94a3b8;
+  --todo-shadow: 0 16px 30px rgba(2, 6, 23, 0.46);
+  --todo-accent: #14b8a6;
+  --todo-accent-strong: #2dd4bf;
+  --todo-accent-soft: rgba(45, 212, 191, 0.18);
+
+  background:
+    radial-gradient(circle at 8% -12%, rgba(56, 189, 248, 0.2), transparent 34%),
+    radial-gradient(circle at 92% 16%, rgba(20, 184, 166, 0.2), transparent 30%),
+    var(--todo-bg);
+}
+
+.worktunnel .todo-header h2 {
+  color: var(--todo-heading);
+  letter-spacing: 0.01em;
+}
+
+.worktunnel .todo-header p {
+  color: var(--todo-muted);
+}
+
+.worktunnel .add-todo-form,
+.worktunnel .todo-list,
+.worktunnel .todo-stats {
+  background: var(--todo-card);
+  border: 1px solid var(--todo-border);
+  border-radius: 0.95rem;
+  box-shadow: var(--todo-shadow);
+}
+
+.worktunnel .add-todo-form {
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+}
+
+.worktunnel .add-todo-form::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--todo-accent), #06b6d4 45%, #22c55e 95%);
+}
+
+.worktunnel .add-todo-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.worktunnel .form-helper {
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+  color: var(--todo-muted);
+  margin-bottom: -0.3rem;
+}
+
+.worktunnel .todo-input,
+.worktunnel .priority-select,
+.worktunnel .schedule-input {
+  border: 1.5px solid var(--todo-border);
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  color: var(--todo-text);
+  transition: all 0.25s ease;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.worktunnel .form-row:first-child {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) auto;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.worktunnel .add-todo-form .form-row:last-child {
+  display: grid;
+  grid-template-columns: 1.1fr 1.05fr 1.4fr;
+  gap: 1rem;
+  align-items: stretch;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(51, 65, 85, 0.08), rgba(100, 116, 139, 0.04));
+  border: 1.5px solid rgba(148, 163, 184, 0.25);
+  border-radius: 0.85rem;
+}
+
+.worktunnel-dark .add-todo-form .form-row:last-child {
+  background: linear-gradient(135deg, rgba(51, 65, 85, 0.55), rgba(100, 116, 139, 0.35));
+  border-color: rgba(100, 116, 139, 0.55);
+}
+
+.worktunnel-dark .todo-input,
+.worktunnel-dark .priority-select,
+.worktunnel-dark .schedule-input {
+  background: #0e1b2e;
+  color: var(--todo-text);
+  border-color: rgba(100, 116, 139, 0.4);
+}
+
+.worktunnel .todo-input::placeholder {
+  color: #94a3b8;
+}
+
+.worktunnel .todo-input {
+  min-height: 3rem;
+  font-size: 1rem;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+}
+
+.worktunnel .priority-select,
+.worktunnel .schedule-input {
+  min-height: 2.8rem;
+  width: 100%;
+  font-size: 0.94rem;
+  padding: 0.68rem 0.85rem;
+  line-height: 1.2;
+}
+
+.worktunnel .priority-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #64748b 50%),
+    linear-gradient(135deg, #64748b 50%, transparent 50%);
+  background-position:
+    calc(100% - 15px) calc(50% - 3px),
+    calc(100% - 9px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.worktunnel-dark .priority-select {
+  background-image:
+    linear-gradient(45deg, transparent 50%, #94a3b8 50%),
+    linear-gradient(135deg, #94a3b8 50%, transparent 50%);
+}
+
+.worktunnel .schedule-input {
+  letter-spacing: 0.01em;
+}
+
+.worktunnel .time-range-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.worktunnel .time-range-dash {
+  color: var(--todo-text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.worktunnel .schedule-input::-webkit-calendar-picker-indicator {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.worktunnel-dark .schedule-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+}
+
+.worktunnel .todo-input:focus,
+.worktunnel .priority-select:focus,
+.worktunnel .schedule-input:focus {
+  outline: none;
+  border-color: var(--todo-accent);
+  box-shadow: 0 0 0 3.5px var(--todo-accent-soft), 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+}
+
+.worktunnel-dark .todo-input:focus,
+.worktunnel-dark .priority-select:focus,
+.worktunnel-dark .schedule-input:focus {
+  background: #1a2637;
+  box-shadow: 0 0 0 3.5px var(--todo-accent-soft), 0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+.worktunnel .add-todo-btn {
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--todo-accent), #0ea5e9);
+  color: #f8fafc;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 18px rgba(14, 165, 233, 0.3);
+  min-height: 3rem;
+  padding: 0.85rem 1.2rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.worktunnel .add-todo-btn:hover {
+  background: linear-gradient(135deg, var(--todo-accent-strong), #0284c7);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(14, 165, 233, 0.4);
+}
+
+.worktunnel .add-todo-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+}
+
+.worktunnel .todo-item {
+  border-left-width: 5px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.worktunnel .todo-item:hover {
+  transform: translateX(2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.worktunnel-dark .todo-item:hover {
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.45);
+}
+
+.worktunnel .todo-title {
+  color: var(--todo-heading);
+  font-weight: 600;
+}
+
+.worktunnel .todo-item.completed .todo-title {
+  color: var(--todo-muted);
+}
+
+.worktunnel .todo-schedule {
+  color: var(--todo-accent);
+  font-weight: 600;
+}
+
+.worktunnel .todo-delete-btn {
+  border-radius: 0.5rem;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+  opacity: 0.7;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+}
+
+.worktunnel .todo-delete-btn:hover {
+  opacity: 1;
+  background: rgba(239, 68, 68, 0.16);
+}
+
+.worktunnel .todo-empty {
+  color: var(--todo-muted);
+  padding: 2.4rem 1.2rem;
+}
+
+.worktunnel .todo-stats h3 {
+  color: var(--todo-heading);
+}
+
+.worktunnel .stat span {
+  color: var(--todo-muted);
+}
+
+.worktunnel .stat strong {
+  color: var(--todo-heading);
+}
+
+.worktunnel .progress-bar {
+  height: 0.7rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.worktunnel-dark .progress-bar {
+  background: #334155;
+}
+
+.worktunnel .progress-fill {
+  background: linear-gradient(90deg, #06b6d4, #10b981);
+  transition: width 0.35s ease;
+}
+
+@media (max-width: 768px) {
+  .worktunnel .todo-section {
+    padding: 1rem;
+    border-radius: 0.85rem;
+  }
+
+  .worktunnel .add-todo-form,
+  .worktunnel .todo-list,
+  .worktunnel .todo-stats {
+    border-radius: 0.8rem;
+  }
+
+  .worktunnel .todo-item:hover {
+    transform: none;
+  }
+
+  .worktunnel .form-row:first-child {
+    grid-template-columns: 1fr;
+  }
+
+  .worktunnel .add-todo-form .form-row:last-child {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+
+  .worktunnel .time-range-group {
+    width: 100%;
+  }
+}

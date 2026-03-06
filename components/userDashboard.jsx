@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './css/WorkTunnel.css';
-import { generateAIResponse } from "/components/js/aiResponseGenerator.js";
-import { ajaxService } from './js/ajaxService';
-import {userLogin} from './js/userLogin';
+import HomeView from './HomeView';
+import TodoView from './TodoView';
+import ExtensionsView from './ExtensionsView';
 
 const WorkTunnelHome = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -12,16 +12,233 @@ const WorkTunnelHome = () => {
   const [chatInput, setChatInput] = useState('');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false);
+  const [isExtensionPromptOpen, setIsExtensionPromptOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentView, setCurrentView] = useState('home'); // home, todo, dashboard
+  const [theme, setTheme] = useState('light'); // light, dark
+  const [loginError, setLoginError] = useState('');
+  const [currentUser, setCurrentUser] = useState({
+    username: 'John Doe',
+    email: 'john@example.com',
+    profession: 'Software Developer',
+    joinDate: '2024-01-15',
+    avatar: 'JD'
+  });
   const rotatingItems = ['manage your time', 'todo list', 'stress', 'productivity'];
   const [rotatingItemIndex, setRotatingItemIndex] = useState(0);
+  
+  // Empty todo items - users add their own
+  const [todos, setTodos] = useState([]);
+  const [newTodoTitle, setNewTodoTitle] = useState('');
+  const [newTodoPriority, setNewTodoPriority] = useState('medium');
+  const [newTodoDate, setNewTodoDate] = useState('');
+  const [newTodoTime, setNewTodoTime] = useState('');
+  const [newTodoEndTime, setNewTodoEndTime] = useState('');
+  
+  // Extensions to install
+  const extensions = [];
+
+  // Check if user is already logged in on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('userData');
+    if (token && savedUser) {
+      try {
+        const userData = JSON.parse(savedUser);
+        setCurrentUser(userData);
+        setIsLoggedIn(true);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
+      }
+    }
+    
+    // Check for saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, []);
 
   const openLoginModal = () => {
     setAuthMode('login');
     setIsAuthModalOpen(true);
+    setLoginError('');
   };
 
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
+    setLoginError('');
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginError('');
+    
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    if (!username || !password) {
+      setLoginError('Please enter both username and password');
+      return;
+    }
+
+    const loginData = {
+      username,
+      password
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
+      const data = await response.json();
+      console.log('Login Success:', data);
+
+      // Store token
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
+      // Create user object
+      const initials = username.split(' ').map(n => n[0]).join('').toUpperCase() || username.substring(0, 2).toUpperCase();
+      const userData = {
+        username: data.username || username,
+        email: data.email || `${username.toLowerCase()}@example.com`,
+        profession: data.profession || 'User',
+        joinDate: new Date().toISOString().split('T')[0],
+        avatar: initials
+      };
+
+      // Store user data
+      localStorage.setItem('userData', JSON.stringify(userData));
+      setCurrentUser(userData);
+      setIsLoggedIn(true);
+      setIsAuthModalOpen(false);
+      setCurrentView('home');
+
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      // If backend is not available, allow demo login for testing
+      if (error.message.includes('fetch') || error.message.includes('NetworkError') || error.message === 'Failed to fetch') {
+        console.warn('Backend not available, using demo mode');
+        
+        // Create demo user
+        const initials = username.split(' ').map(n => n[0]).join('').toUpperCase() || username.substring(0, 2).toUpperCase();
+        const userData = {
+          username: username,
+          email: `${username.toLowerCase().replace(/\s+/g, '')}@example.com`,
+          profession: 'Demo User',
+          joinDate: new Date().toISOString().split('T')[0],
+          avatar: initials
+        };
+
+        // Store demo data
+        localStorage.setItem('token', 'demo-token-' + Date.now());
+        localStorage.setItem('userData', JSON.stringify(userData));
+        setCurrentUser(userData);
+        setIsLoggedIn(true);
+        setIsAuthModalOpen(false);
+        setCurrentView('home');
+      } else {
+        setLoginError(error.message || 'Login failed. Please try again.');
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userData');
+    setIsLoggedIn(false);
+    setCurrentView('home');
+    setIsProfilePopupOpen(false);
+    setCurrentUser({
+      username: 'John Doe',
+      email: 'john@example.com',
+      profession: 'Software Developer',
+      joinDate: '2024-01-15',
+      avatar: 'JD'
+    });
+  };
+
+  const toggleProfilePopup = () => {
+    setIsProfilePopupOpen(!isProfilePopupOpen);
+  };
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  const toggleTodo = (id) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  const addTodo = (e) => {
+    e.preventDefault();
+    
+    // Validate all required fields
+    if (!newTodoTitle.trim()) {
+      alert('Please enter a task title');
+      return;
+    }
+    
+    if (!newTodoPriority) {
+      alert('Please select a priority level');
+      return;
+    }
+    
+    if (!newTodoDate) {
+      alert('Please select a date');
+      return;
+    }
+    
+    if (!newTodoTime) {
+      alert('Please select a start time');
+      return;
+    }
+
+    const newTodo = {
+      id: Date.now(),
+      title: newTodoTitle,
+      completed: false,
+      priority: newTodoPriority,
+      date: newTodoDate,
+      time: newTodoTime,
+      endTime: newTodoEndTime
+    };
+
+    setTodos([...todos, newTodo]);
+    setNewTodoTitle('');
+    setNewTodoPriority('medium');
+    setNewTodoDate('');
+    setNewTodoTime('');
+    setNewTodoEndTime('');
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  const installExtension = (id) => {
+    // In a real app, this would make an API call
+    console.log(`Installing extension ${id}`);
   };
 
   const openAiChat = () => {
@@ -55,6 +272,15 @@ const WorkTunnelHome = () => {
     return () => clearInterval(rotateInterval);
   }, [rotatingItems.length]);
 
+  // Show extension install prompt whenever a user session becomes active.
+  useEffect(() => {
+    if (isLoggedIn) {
+      setIsExtensionPromptOpen(true);
+    } else {
+      setIsExtensionPromptOpen(false);
+    }
+  }, [isLoggedIn]);
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (chatInput.trim() && !isAiLoading) {
@@ -64,7 +290,8 @@ const WorkTunnelHome = () => {
       setIsAiLoading(true);
 
       try {
-        const response = await requestAiResponse(userMessage);
+        // Placeholder for AI response - integrate with your AI service
+        const response = { reply: 'I\'m here to help you manage your tasks and boost productivity. What would you like assistance with?' };
         setChatMessages((prev) => [...prev, { type: 'ai', text: response.reply }]);
       } catch {
         setChatMessages((prev) => [
@@ -78,7 +305,7 @@ const WorkTunnelHome = () => {
   };
 
   return (
-    <div className="worktunnel">
+    <div className={`worktunnel worktunnel-${theme}`}>
       <header className="worktunnel-header">
         <div className="worktunnel-logo">Work Tunnel</div>
         
@@ -95,15 +322,113 @@ const WorkTunnelHome = () => {
         )}
 
         <nav className={`worktunnel-nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-          <a href="#" onClick={() => setIsMobileMenuOpen(false)}>Home</a>
-          <a href="#about" onClick={() => setIsMobileMenuOpen(false)}>About</a>
-          <a href="#feedback" onClick={() => setIsMobileMenuOpen(false)}>Feedbacks</a>
-          <a href="#" onClick={() => setIsMobileMenuOpen(false)}>AI Assistant</a>
-          <button type="button" className="login-btn" onClick={() => { openLoginModal(); setIsMobileMenuOpen(false); }}>Login</button>
+          {isLoggedIn ? (
+            <>
+              <button type="button" className="nav-link" onClick={() => { setCurrentView('home'); setIsMobileMenuOpen(false); }}>Home</button>
+              <button type="button" className="nav-link" onClick={() => { setCurrentView('todo'); setIsMobileMenuOpen(false); }}>📝 Todo List</button>
+              <button type="button" className="nav-link" onClick={() => { setCurrentView('dashboard'); setIsMobileMenuOpen(false); }}>Extensions</button>
+              <button type="button" className="nav-link" onClick={() => { openAiChat(); setIsMobileMenuOpen(false); }}>🤖 AI Chat</button>
+            </>
+          ) : (
+            <>
+              <a href="#" onClick={() => setIsMobileMenuOpen(false)}>Home</a>
+              <a href="#about" onClick={() => setIsMobileMenuOpen(false)}>About</a>
+              <a href="#feedback" onClick={() => setIsMobileMenuOpen(false)}>Feedbacks</a>
+              <a href="#" onClick={() => { openAiChat(); setIsMobileMenuOpen(false); }}>AI Assistant</a>
+            </>
+          )}
         </nav>
+
+        {isLoggedIn && (
+          <div className="user-profile-section">
+            <button type="button" className="theme-toggle" onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+            <button type="button" className="profile-trigger" onClick={toggleProfilePopup} title="Profile">
+              <span className="profile-avatar">{currentUser.avatar}</span>
+              <span className="profile-username">{currentUser.username.split(' ')[0]}</span>
+            </button>
+            
+            {isProfilePopupOpen && (
+              <div className="profile-popup-overlay" onClick={() => setIsProfilePopupOpen(false)}>
+                <div className="profile-popup" onClick={(e) => e.stopPropagation()}>
+                  <div className="profile-header">
+                    <div className="profile-avatar-large">{currentUser.avatar}</div>
+                    <h3>{currentUser.username}</h3>
+                    <p className="profile-meta">{currentUser.profession}</p>
+                  </div>
+
+                  <div className="profile-details">
+                    <div className="detail-item">
+                      <span className="detail-label">Email:</span>
+                      <span className="detail-value">{currentUser.email}</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Member Since:</span>
+                      <span className="detail-value">{currentUser.joinDate}</span>
+                    </div>
+                    <div className="detail-item">
+                      <span className="detail-label">Profile Status:</span>
+                      <span className="detail-value status-badge">Active</span>
+                    </div>
+                  </div>
+
+                  <div className="profile-actions">
+                    <button type="button" className="profile-btn edit-btn">✏️ Edit Profile</button>
+                    <button type="button" className="profile-btn settings-btn">⚙️ Settings</button>
+                    <button type="button" className="profile-btn logout-btn" onClick={handleLogout}>🚪 Logout</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {!isLoggedIn && (
+          <button type="button" className="login-btn" onClick={() => { openLoginModal(); }}>Login</button>
+        )}
       </header>
 
       <main className="worktunnel-main">
+        {isLoggedIn ? (
+          <>
+            {currentView === 'home' && (
+              <HomeView
+                currentUser={currentUser}
+                todos={todos}
+                openAiChat={openAiChat}
+                setCurrentView={setCurrentView}
+              />
+            )}
+
+            {currentView === 'todo' && (
+              <TodoView
+                todos={todos}
+                newTodoTitle={newTodoTitle}
+                setNewTodoTitle={setNewTodoTitle}
+                newTodoPriority={newTodoPriority}
+                setNewTodoPriority={setNewTodoPriority}
+                newTodoDate={newTodoDate}
+                setNewTodoDate={setNewTodoDate}
+                newTodoTime={newTodoTime}
+                setNewTodoTime={setNewTodoTime}
+                newTodoEndTime={newTodoEndTime}
+                setNewTodoEndTime={setNewTodoEndTime}
+                addTodo={addTodo}
+                toggleTodo={toggleTodo}
+                deleteTodo={deleteTodo}
+              />
+            )}
+
+            {currentView === 'dashboard' && (
+              <ExtensionsView
+                extensions={extensions}
+                installExtension={installExtension}
+              />
+            )}
+          </>
+        ) : (
+          <>
         <div className="welcome">
           <h1>manage your day today life with me</h1>
           <p>
@@ -275,6 +600,8 @@ const WorkTunnelHome = () => {
             </div>
           </div>
         </section>
+        </>
+        )}
       </main>
 
       {isAiChatOpen && (
@@ -335,14 +662,19 @@ const WorkTunnelHome = () => {
             {authMode === 'login' ? (
               <>
                 <h2>Login</h2>
-                <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+                {loginError && (
+                  <div className="auth-error">
+                    {loginError}
+                  </div>
+                )}
+                <form className="auth-form" onSubmit={handleLogin}>
                   <label htmlFor="username">Username</label>
                   <input id="username" type="text" placeholder="Enter username" required />
 
                   <label htmlFor="password">Password</label>
                   <input id="password" type="password" placeholder="Enter password" required />
 
-                  <button type="submit" onClick={userLogin} className="auth-submit">Login</button>
+                  <button type="submit" className="auth-submit">Login</button>
                 </form>
 
                 <div className="auth-actions">
@@ -375,7 +707,7 @@ const WorkTunnelHome = () => {
                   <label htmlFor="signup-age">Age</label>
                   <input id="signup-age" type="number" placeholder="Enter age" min="1" required />
 
-                  <button type="submit" onClick={ajaxService} className="auth-submit">Create account</button>
+                  <button type="submit" className="auth-submit">Create account</button>
                 </form>
 
                 <div className="auth-actions">
@@ -389,6 +721,38 @@ const WorkTunnelHome = () => {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {isLoggedIn && isExtensionPromptOpen && (
+        <div className="extension-install-overlay" onClick={() => setIsExtensionPromptOpen(false)}>
+          <div className="extension-install-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Install Work Tunnel Extension</h3>
+            <p>
+              Boost your workflow with the Work Tunnel extension. Install it now for quicker access,
+              smart suggestions, and faster task management.
+            </p>
+            <div className="extension-install-actions">
+              <button
+                type="button"
+                className="install-now-btn"
+                onClick={() => {
+                  installExtension('worktunnel-extension');
+                  setCurrentView('dashboard');
+                  setIsExtensionPromptOpen(false);
+                }}
+              >
+                Install Now
+              </button>
+              <button
+                type="button"
+                className="install-later-btn"
+                onClick={() => setIsExtensionPromptOpen(false)}
+              >
+                Later
+              </button>
+            </div>
           </div>
         </div>
       )}
