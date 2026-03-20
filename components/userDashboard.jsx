@@ -3,6 +3,7 @@ import './css/WorkTunnel.css';
 import HomeView from './HomeView';
 import TodoView from './TodoView';
 import ExtensionsView from './ExtensionsView';
+import { clearSession } from './js/authService';
 
 const WorkTunnelHome = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -160,8 +161,7 @@ const WorkTunnelHome = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userData');
+    clearSession();
     setIsLoggedIn(false);
     setCurrentView('home');
     setIsProfilePopupOpen(false);
