@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './css/WorkTunnel.css';
 import { generateAIResponse } from "/components/js/aiResponseGenerator.js";
-import { ajaxService } from './js/ajaxService';
+import { ajaxService, userRegister } from './js/userRegister.js';
 import {userLogin} from './js/userLogin';
 
 const WorkTunnelHome = () => {
@@ -14,7 +14,21 @@ const WorkTunnelHome = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const rotatingItems = ['manage your time', 'todo list', 'stress', 'productivity'];
   const [rotatingItemIndex, setRotatingItemIndex] = useState(0);
+    const [signupData, setSignupData] = useState({
+    name: '',
+    email: '',
+    profession: '',
+    password: '',
+    age: ''
+  });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSignupData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
   const openLoginModal = () => {
     setAuthMode('login');
     setIsAuthModalOpen(true);
@@ -359,25 +373,25 @@ const WorkTunnelHome = () => {
             ) : (
               <>
                 <h2>Sign Up</h2>
-                <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
-                  <label htmlFor="signup-name">Name</label>
-                  <input id="signup-name" type="text" placeholder="Enter name" required />
+                <form className="auth-form" onSubmit={(e) => userRegister(e, signupData)}>
 
-                  <label htmlFor="signup-email">Email</label>
-                  <input id="signup-email" type="email" placeholder="Enter email" required />
+  <label>Name</label>
+  <input name="name" type="text" onChange={handleChange} required />
 
-                  <label htmlFor="signup-profession">Profession</label>
-                  <input id="signup-profession" type="text" placeholder="Enter profession" required />
+  <label>Email</label>
+  <input name="email" type="email" onChange={handleChange} required />
 
-                  <label htmlFor="signup-password">Password</label>
-                  <input id="signup-password" type="password" placeholder="Enter password" required />
+  <label>Profession</label>
+  <input name="profession" type="text" onChange={handleChange} required />
 
-                  <label htmlFor="signup-age">Age</label>
-                  <input id="signup-age" type="number" placeholder="Enter age" min="1" required />
+  <label>Password</label>
+  <input name="password" type="password" onChange={handleChange} required />
 
-                  <button type="submit" onClick={ajaxService} className="auth-submit">Create account</button>
-                </form>
+  <label>Age</label>
+  <input name="age" type="number" onChange={handleChange} required />
 
+  <button type="submit">Create account</button>
+</form>
                 <div className="auth-actions">
                   <button
                     type="button"
