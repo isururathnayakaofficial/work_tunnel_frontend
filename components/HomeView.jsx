@@ -1,19 +1,22 @@
 import React from 'react';
+import './css/HomeView.css';
 
 const HomeView = ({ currentUser, todos, openAiChat, setCurrentView }) => {
-  const completedCount = todos.filter((t) => t.completed).length;
-  const pendingCount = todos.filter((t) => !t.completed).length;
+  const completedCount = todos.filter(t => t.completed).length;
+  const pendingCount = todos.filter(t => !t.completed).length;
 
   return (
-    <div className="user-home-section">
+    <div className="home-view">
       <div className="welcome-card">
-        <h1>Welcome back, {currentUser.username}! 👋</h1>
+        <h1>Hello, {currentUser.username}! 👋</h1>
         <p>You have {pendingCount} tasks pending today</p>
-        <button type="button" className="home-ai-btn" onClick={openAiChat}>🤖 Ask AI for suggestions</button>
+        <button className="btn-secondary" onClick={openAiChat}>
+          🤖 Ask AI for suggestions
+        </button>
       </div>
 
       <div className="home-grid">
-        <div className="quick-stats">
+        <div className="stats-grid">
           <div className="stat-card">
             <h3>Today's Tasks</h3>
             <p className="stat-value">{todos.length}</p>
@@ -33,9 +36,15 @@ const HomeView = ({ currentUser, todos, openAiChat, setCurrentView }) => {
 
         <div className="quick-actions">
           <h3>Quick Access</h3>
-          <button type="button" className="quick-btn" onClick={() => setCurrentView('todo')}>📝 View All Tasks</button>
-          <button type="button" className="quick-btn" onClick={() => setCurrentView('dashboard')}>🧩 Install Extensions</button>
-          <button type="button" className="quick-btn" onClick={openAiChat}>💡 Get Productivity Tips</button>
+          <button className="quick-btn" onClick={() => setCurrentView('todo')}>
+            📝 View All Tasks
+          </button>
+          <button className="quick-btn" onClick={() => setCurrentView('dashboard')}>
+            🧩 Install Extensions
+          </button>
+          <button className="quick-btn" onClick={openAiChat}>
+            💡 Get Productivity Tips
+          </button>
         </div>
       </div>
     </div>

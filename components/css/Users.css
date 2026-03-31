@@ -1,142 +1,105 @@
-/* Users.css */
-.users-container {
-  padding: 1.5rem;
-  background-color: #f5f7fa;
-  min-height: calc(100vh - 70px); /* Adjust based on navbar height */
+.todo-view {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
 }
 
-/* Stats Card */
-.stats-card {
-  background-color: #0a192f; /* Dark blue */
-  color: white;
-  border-radius: 8px;
-  padding: 1.5rem;
+.todo-view h2 {
+  color: var(--primary-dark);
+  margin-bottom: 1.5rem;
+}
+
+.todo-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 2rem;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--gray-100);
+  padding: 1rem;
+  border-radius: var(--border-radius);
 }
 
-.stats-card h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: #ffd966; /* Yellow */
+.todo-form input,
+.todo-form select,
+.todo-form button {
+  padding: 0.5rem;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
 }
 
-.stats-number {
-  font-size: 2.5rem;
+.todo-form input,
+.todo-form select {
+  flex: 1;
+  min-width: 120px;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--white);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  transition: all 0.2s;
+}
+
+.todo-item.completed {
+  opacity: 0.6;
+}
+
+.todo-item.completed .todo-content h4 {
+  text-decoration: line-through;
+}
+
+.todo-content {
+  flex: 1;
+}
+
+.todo-content h4 {
+  margin-bottom: 0.25rem;
+}
+
+.todo-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--gray-800);
+}
+
+.priority-badge {
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
   font-weight: bold;
-  margin: 0.5rem 0 0;
-  color: white;
+  text-transform: uppercase;
 }
 
-/* Table Wrapper for horizontal scroll on small screens */
-.users-table-wrapper {
-  overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: white;
-}
-
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-
-.users-table thead tr {
-  background-color: #0a192f; /* Dark blue */
-  color: white;
-}
-
-.users-table th,
-.users-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.users-table tbody tr:hover {
-  background-color: #f9f9f9;
-}
+.priority-badge.low { background: #d4edda; color: #155724; }
+.priority-badge.medium { background: #fff3cd; color: #856404; }
+.priority-badge.high { background: #f8d7da; color: #721c24; }
 
 .delete-btn {
-  background-color: #dc3545;
-  color: white;
+  background: none;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  font-size: 1.25rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  opacity: 0.6;
+  transition: opacity 0.2s;
 }
-
 .delete-btn:hover {
-  background-color: #c82333;
+  opacity: 1;
 }
 
-.empty-message {
+.empty-state {
   text-align: center;
+  color: var(--gray-800);
   padding: 2rem;
-  color: #666;
-}
-
-/* Responsive design: transform table to cards on small screens */
-@media (max-width: 768px) {
-  .users-container {
-    padding: 1rem;
-  }
-
-  .stats-card {
-    padding: 1rem;
-  }
-
-  .stats-number {
-    font-size: 2rem;
-  }
-
-  .users-table thead {
-    display: none; /* Hide headers */
-  }
-
-  .users-table,
-  .users-table tbody,
-  .users-table tr,
-  .users-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .users-table tr {
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .users-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-    text-align: right;
-  }
-
-  .users-table td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    width: 40%;
-    text-align: left;
-    color: #0a192f;
-  }
-
-  .users-table td:last-child {
-    border-bottom: none;
-  }
-
-  .delete-btn {
-    width: 100%;
-    text-align: center;
-  }
 }

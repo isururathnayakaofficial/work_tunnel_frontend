@@ -1,36 +1,61 @@
-// userRegister.js
+import { registerUser, setSession } from './authService';
 
+// Register function using authService (localStorage-based authentication)
 export const userRegister = async (e, signupData) => {
   e.preventDefault();
 
-  // Convert age to number
-  const payload = {
-    ...signupData,
-    age: parseInt(signupData.age)
-  };
-
-  console.log("Sending JSON:", payload);
+  console.log("Signup Data:", signupData);
 
   try {
-    const response = await fetch("http://localhost:8081/api/users/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
+    // Validate required fields
+    if (!signupData.name || !signupData.email || !signupData.password) {
+      alert("Please fill in all required fields ❌");
+      throw new Error('Missing required fields');
+    }
+
+    // Register user using authService
+    const newUser = registerUser({
+      name: signupData.name,
+      email: signupData.email,
+      password: signupData.password,
+      role: 'user',
+      adminKey: ''
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      alert("User registered successfully ✅");
-      console.log(data);
-    } else {
-      const errorText = await response.text();
-      alert("Registration failed ❌");
-      console.error(errorText);
-    }
+    // Set session for newly registered user
+    const session = setSession(newUser);
+    
+    alert("User registered successfully ✅");
+    console.log("Registered user:", newUser);
+    console.log("Session:", session);
+    
+    return { success: true, user: newUser };
   } catch (error) {
-    console.error("Error:", error);
-    alert("Server error ⚠️");
+    console.error("Registration error:", error);
+    alert("Registration failed: " + error.message + " ❌");
+    throw error;
+  }
+};
+
+// Alternative function for form-based registration
+export const registerUserFromForm = async (formData) => {
+  try {
+    if (!formData.name || !formData.email || !formData.password) {
+      throw new Error('Name, email, and password are required');
+    }
+
+    const newUser = registerUser({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      role: 'user',
+      adminKey: ''
+    });
+
+    setSession(newUser);
+    return { success: true, user: newUser };
+  } catch (error) {
+    console.error("Registration error:", error);
+    throw error;
   }
 };

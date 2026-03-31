@@ -1,0 +1,38 @@
+.extension-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.extension-prompt-modal {
+  background: var(--white);
+  width: 90%;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.extension-prompt-modal h3 {
+  margin-bottom: 1rem;
+  color: var(--primary-dark);
+}
+
+.extension-prompt-modal p {
+  margin-bottom: 1.5rem;
+  color: var(--gray-800);
+}
+
+.prompt-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
