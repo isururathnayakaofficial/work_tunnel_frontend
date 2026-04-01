@@ -216,23 +216,42 @@ const WorkTunnelHome = () => {
   const openAiChat = () => setIsAiChatOpen(true);
   const closeAiChat = () => setIsAiChatOpen(false);
 
-  const sendMessage = async (e) => {
-    e.preventDefault();
-    if (!chatInput.trim() || isAiLoading) return;
-    const userMessage = chatInput;
-    setChatMessages([...chatMessages, { type: 'user', text: userMessage }]);
-    setChatInput('');
-    setIsAiLoading(true);
-    try {
-      // Simulate AI response
-      const reply = "I'm here to help you manage your tasks and boost productivity. What would you like assistance with?";
-      setChatMessages(prev => [...prev, { type: 'ai', text: reply }]);
-    } catch {
-      setChatMessages(prev => [...prev, { type: 'ai', text: 'Something went wrong. Please try again.' }]);
-    } finally {
-      setIsAiLoading(false);
+const sendMessage = async (e) => {
+  e.preventDefault();
+  if (!chatInput.trim() || isAiLoading) return;
+
+  const userMessage = chatInput;
+  setChatMessages([...chatMessages, { type: 'user', text: userMessage }]);
+  setChatInput('');
+  setIsAiLoading(true);
+
+  try {
+    // Call the backend AI endpoint
+    const response = await fetch('http://localhost:8081/api/ai/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        promptKeywords: userMessage,
+        userId: null // or set actual user ID if logged in
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-  };
+
+    // Get AI response from backend
+    const aiText = await response.text(); // backend currently returns String
+    setChatMessages(prev => [...prev, { type: 'ai', text: aiText }]);
+  } catch (error) {
+    console.error('Error fetching AI response:', error);
+    setChatMessages(prev => [...prev, { type: 'ai', text: 'Something went wrong. Please try again.' }]);
+  } finally {
+    setIsAiLoading(false);
+  }
+};
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
