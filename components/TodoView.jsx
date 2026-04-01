@@ -3,11 +3,13 @@ import './css/TodoView.css';
 
 const API_BASE_URL = 'http://localhost:8081';
 
+// Helper to format time for backend
 const toSqlTime = (timeValue) => {
   if (!timeValue) return null;
   return /^\d{2}:\d{2}:\d{2}$/.test(timeValue) ? timeValue : `${timeValue}:00`;
 };
 
+// Convert form data to payload
 const toTodoDto = ({ title, priority, date, startTime, endTime, status }) => ({
   title, priority, date, startTime, endTime, status
 });
@@ -47,44 +49,74 @@ const TodoView = ({ currentUser, onTodosChange }) => {
 
   // fetch registerId from backend by email
   const fetchRegisterId = useCallback(async () => {
-    if (!currentUser?.email) return null;
+    if (!currentUser?.email) {
+      console.log('❌ fetchRegisterId: No email in currentUser');
+      return null;
+    }
     try {
+      console.log(`🔍 Fetching registerId for email: ${currentUser.email}`);
       const res = await fetch(`${API_BASE_URL}/auth/getAll`);
       const data = await parseApiResponse(res);
       if (!res.ok) throw new Error("Failed to fetch users");
 
       const users = Array.isArray(data) ? data : data.users || [];
+      console.log('👥 Total users found:', users.length);
       const user = users.find(u =>
         String(u.email).trim().toLowerCase() === String(currentUser.email).trim().toLowerCase()
       );
-      if (!user) return null;
-
-      const id = user.registerId || user.registerID || user.id || user.userId;
-      setRegisterId(id);
-
-      if (typeof window !== 'undefined' && window.chrome?.storage?.local) {
-        window.chrome.storage.local.set({ registerId: id }, () => {
-          console.log('Saved registerId to chrome.storage.local:', id);
-        });
+      if (!user) {
+        console.log('❌ User not found with email:', currentUser.email);
+        return null;
       }
 
+      const id = user.registerId || user.registerID || user.id || user.userId;
+      console.log('✅ Found registerId:', id);
+      setRegisterId(id);
       return id;
     } catch (err) {
-      console.error(err);
+      console.error('❌ fetchRegisterId Error:', err);
       return null;
     }
   }, [currentUser]);
 
+  // fetch todos from backend
   const fetchTodos = useCallback(async (id) => {
-    if (!id) return;
+    if (!id) {
+      console.log('❌ fetchTodos: No ID provided');
+      return;
+    }
     try {
-      const res = await fetch(`${API_BASE_URL}/api/todo/get/${id}`);
+      console.log(`📥 Fetching todos for registerId: ${id}`);
+      const url = `${API_BASE_URL}/api/todo/get/${id}`;
+      console.log(`📍 Request URL: ${url}`);
+      
+      const res = await fetch(url);
       const data = await parseApiResponse(res);
-      if (!res.ok) throw new Error("Failed to fetch todos");
-      const list = Array.isArray(data) ? data : data.todos || [];
-      setTodos(list.map(normalizeTodo));
+      
+      console.log('📊 API Response Status:', res.status, res.ok);
+      console.log('📊 API Response Data:', data);
+      
+      if (!res.ok) throw new Error(`Failed to fetch todos (Status: ${res.status})`);
+
+      // Handle different response structures
+      let list = [];
+      if (Array.isArray(data)) {
+        list = data;
+      } else if (data.todos && Array.isArray(data.todos)) {
+        list = data.todos;
+      } else if (data.data && Array.isArray(data.data)) {
+        list = data.data;
+      } else if (data.list && Array.isArray(data.list)) {
+        list = data.list;
+      }
+      
+      console.log('📋 Raw todos list from API:', list);
+      const normalizedTodos = list.map(normalizeTodo);
+      console.log('📋 Normalized todos list:', normalizedTodos);
+      setTodos(normalizedTodos);
     } catch (err) {
-      alert(err.message);
+      console.error('❌ fetchTodos Error:', err);
+      alert(`Error fetching todos: ${err.message}`);
     }
   }, []);
 
@@ -139,28 +171,41 @@ const TodoView = ({ currentUser, onTodosChange }) => {
       status: 'pending'
     });
 
+    console.log('📝 Saving todo with payload:', payload);
+    console.log('👤 Using registerId:', registerId);
+
     try {
       if (editingTodoId) {
         // Update
-        const res = await fetch(`${API_BASE_URL}/api/todo/update/${editingTodoId}`, {
+        const url = `${API_BASE_URL}/api/todo/update/${editingTodoId}`;
+        console.log(`🔄 Updating todo at: ${url}`);
+        const res = await fetch(url, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error("Update failed");
+        console.log('🔄 Update Status:', res.status, res.ok);
+        if (!res.ok) throw new Error(`Update failed (Status: ${res.status})`);
       } else {
         // Add
-        const res = await fetch(`${API_BASE_URL}/api/todo/save/${registerId}`, {
+        const url = `${API_BASE_URL}/api/todo/save/${registerId}`;
+        console.log(`➕ Adding todo at: ${url}`);
+        const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error("Add failed");
+        console.log('➕ Add Status:', res.status, res.ok);
+        const responseData = await parseApiResponse(res);
+        console.log('➕ Add Response:', responseData);
+        if (!res.ok) throw new Error(`Add failed (Status: ${res.status})`);
       }
 
+      console.log('✅ Save successful. Refreshing todos...');
       fetchTodos(registerId);
       clearForm();
     } catch (err) {
+      console.error('❌ saveTodo Error:', err);
       alert(err.message);
     }
   };
@@ -197,12 +242,18 @@ const TodoView = ({ currentUser, onTodosChange }) => {
 
   // DELETE
   const deleteTodo = async (todoId) => {
+    console.log(`🗑️ Deleting todo: ${todoId}`);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/todo/delete/${todoId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error("Delete failed");
+      const url = `${API_BASE_URL}/api/todo/delete/${todoId}`;
+      console.log(`📍 Delete URL: ${url}`);
+      const res = await fetch(url, { method: 'DELETE' });
+      console.log('🗑️ Delete Status:', res.status, res.ok);
+      if (!res.ok) throw new Error(`Delete failed (Status: ${res.status})`);
       setTodos(prev => prev.filter(t => t.id !== todoId));
       if (editingTodoId === todoId) clearForm();
+      console.log('✅ Todo deleted successfully');
     } catch (err) {
+      console.error('❌ deleteTodo Error:', err);
       alert(err.message);
     }
   };
