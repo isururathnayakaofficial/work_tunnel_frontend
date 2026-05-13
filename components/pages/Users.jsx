@@ -24,7 +24,9 @@ const Users = () => {
 
   // ✅ LOAD DATA ON PAGE LOAD
   useEffect(() => {
-    fetchUsers();
+    (async () => {
+      await fetchUsers();
+    })();
   }, []);
 
   // ✅ DELETE USER

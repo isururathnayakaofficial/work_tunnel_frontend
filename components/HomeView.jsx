@@ -2,8 +2,18 @@ import React from 'react';
 import './css/HomeView.css';
 
 const HomeView = ({ currentUser, todos, openAiChat, setCurrentView }) => {
-  const completedCount = todos.filter(t => t.completed).length;
-  const pendingCount = todos.filter(t => !t.completed).length;
+  const safeTodos = Array.isArray(todos) ? todos : [];
+  const completedCount = safeTodos.filter((t) => t.completed).length;
+  const totalCount = safeTodos.length;
+  const pendingCount = totalCount - completedCount;
+
+  const chartSize = 180;
+  const strokeWidth = 16;
+  const radius = (chartSize - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const completedRatio = totalCount > 0 ? completedCount / totalCount : 0;
+  const completedArc = completedRatio * circumference;
+  const completionPercent = totalCount > 0 ? Math.round(completedRatio * 100) : 0;
 
   return (
     <div className="home-view">
@@ -19,7 +29,7 @@ const HomeView = ({ currentUser, todos, openAiChat, setCurrentView }) => {
         <div className="stats-grid">
           <div className="stat-card">
             <h3>Today's Tasks</h3>
-            <p className="stat-value">{todos.length}</p>
+            <p className="stat-value">{totalCount}</p>
             <p className="stat-label">Total tasks</p>
           </div>
           <div className="stat-card">
@@ -31,6 +41,55 @@ const HomeView = ({ currentUser, todos, openAiChat, setCurrentView }) => {
             <h3>Pending</h3>
             <p className="stat-value">{pendingCount}</p>
             <p className="stat-label">Remaining</p>
+          </div>
+        </div>
+
+        <div className="progress-card">
+          <h3>Task Completion Overview</h3>
+          <div className="progress-chart-wrap">
+            <svg
+              className="progress-donut"
+              width={chartSize}
+              height={chartSize}
+              viewBox={`0 0 ${chartSize} ${chartSize}`}
+              role="img"
+              aria-label={`Completed ${completedCount} out of ${totalCount} tasks`}
+            >
+              <circle
+                className="progress-donut-track"
+                cx={chartSize / 2}
+                cy={chartSize / 2}
+                r={radius}
+                strokeWidth={strokeWidth}
+              />
+              <circle
+                className="progress-donut-segment"
+                cx={chartSize / 2}
+                cy={chartSize / 2}
+                r={radius}
+                strokeWidth={strokeWidth}
+                strokeDasharray={`${completedArc} ${circumference - completedArc}`}
+              />
+            </svg>
+            <div className="progress-center-text">
+              <span className="progress-percent">{completionPercent}%</span>
+              <span className="progress-caption">Done</span>
+            </div>
+          </div>
+
+          <div className="progress-legend">
+            <div className="legend-item">
+              <span className="legend-dot legend-dot-completed" />
+              <span>Completed: {completedCount}</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot legend-dot-pending" />
+              <span>Remaining: {pendingCount}</span>
+            </div>
+            <div className="legend-item">
+              <span className="legend-dot legend-dot-total" />
+              <span>Total: {totalCount}</span>
+            </div>
           </div>
         </div>
 

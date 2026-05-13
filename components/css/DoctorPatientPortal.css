@@ -1,0 +1,263 @@
+.doctor-portal-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background:
+    radial-gradient(circle at top left, rgba(255, 215, 0, 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgba(0, 35, 102, 0.1), transparent 24%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.doctor-portal-card {
+  width: 100%;
+  max-width: 920px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+  padding: 2rem;
+}
+
+.doctor-portal-back-btn {
+  background: transparent;
+  color: #002366;
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.doctor-portal-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.doctor-portal-heading {
+  margin: 0;
+  font-size: 1.9rem;
+  line-height: 1.2;
+  color: #002366;
+  letter-spacing: -0.03em;
+}
+
+.doctor-portal-subheading {
+  margin: 0 0 1.5rem;
+  color: #475569;
+  font-size: 1rem;
+}
+
+.doctor-portal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.doctor-portal-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.doctor-portal-help-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.doctor-portal-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.doctor-portal-help-btn {
+  border: none;
+  background: transparent;
+  color: #002366;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.doctor-portal-help-btn:hover {
+  color: #001233;
+}
+
+.doctor-portal-input,
+.doctor-portal-textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  box-sizing: border-box;
+}
+
+.doctor-portal-input:focus,
+.doctor-portal-textarea:focus {
+  border-color: #002366;
+  box-shadow: 0 0 0 4px rgba(0, 35, 102, 0.12);
+}
+
+.doctor-portal-textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.doctor-portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.doctor-portal-primary-btn {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 0.95rem 1.2rem;
+  background: linear-gradient(135deg, #ffd700 0%, #f4c400 100%);
+  color: #0f172a;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(255, 215, 0, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.doctor-portal-primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 26px rgba(255, 215, 0, 0.3);
+}
+
+.doctor-portal-primary-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.doctor-portal-reset-btn {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #002366;
+  border-radius: 999px;
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.doctor-portal-reset-btn:hover {
+  background: #edf2f7;
+}
+
+.doctor-portal-badge {
+  margin: 1rem 0 1.25rem;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+
+.doctor-portal-footer-note {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  text-align: center;
+  font-size: 0.82rem;
+}
+
+.doctor-portal-response {
+  margin-top: 0.75rem;
+  border-radius: 14px;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid transparent;
+}
+
+.doctor-portal-response strong {
+  display: block;
+  margin-bottom: 0.45rem;
+}
+
+.doctor-portal-response pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.84rem;
+}
+
+.doctor-portal-response-success {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.doctor-portal-response-error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+@media (max-width: 768px) {
+  .doctor-portal-page {
+    padding: 1rem;
+  }
+
+  .doctor-portal-card {
+    padding: 1.25rem;
+    border-radius: 20px;
+  }
+
+  .doctor-portal-heading {
+    font-size: 1.5rem;
+  }
+
+  .doctor-portal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .doctor-portal-topbar {
+    align-items: stretch;
+  }
+
+  .doctor-portal-help-row {
+    align-items: flex-start;
+  }
+
+  .doctor-portal-reset-btn,
+  .doctor-portal-back-btn {
+    width: fit-content;
+  }
+}
+
+@media (max-width: 480px) {
+  .doctor-portal-card {
+    padding: 1rem;
+  }
+
+  .doctor-portal-input,
+  .doctor-portal-textarea {
+    border-radius: 14px;
+    padding: 0.85rem 0.95rem;
+  }
+
+  .doctor-portal-primary-btn {
+    padding: 0.9rem 1rem;
+  }
+}

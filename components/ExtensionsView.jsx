@@ -4,9 +4,12 @@ import './css/ExtensionsView.css';
 const ExtensionsView = ({ extensions, installExtension }) => {
   // Example extensions (replace with actual data)
   const demoExtensions = [
-    { id: 1, name: 'Task Manager Pro', description: 'Advanced task management', icon: '📋' },
-    { id: 2, name: 'Focus Timer', description: 'Pomodoro timer to boost focus', icon: '⏲️' },
-    { id: 3, name: 'AI Insights', description: 'Get AI-powered productivity insights', icon: '🤖' },
+    {
+      id: 1,
+      name: 'Zero Distraction Extension',
+      description: 'V 1.0 version - blocks interruptions and helps you stay focused.',
+      icon: '🎯'
+    },
   ];
 
   const extList = extensions.length > 0 ? extensions : demoExtensions;
@@ -21,7 +24,7 @@ const ExtensionsView = ({ extensions, installExtension }) => {
             <div className="extension-icon">{ext.icon}</div>
             <h3>{ext.name}</h3>
             <p>{ext.description}</p>
-            <button className="btn-secondary" onClick={() => installExtension(ext.id)}>
+            <button className="extension-install-btn" onClick={() => installExtension(ext.id)}>
               Install
             </button>
           </div>

@@ -6,6 +6,7 @@ import Footer from './Footer.jsx';
 import HomeView from './HomeView.jsx';
 import TodoView from './TodoView';
 import ExtensionsView from './ExtensionsView';
+import DoctorPatientPortal from './DoctorPatientPortal';
 import AIChat from './AIChat';
 import AuthModal from './AuthModal.jsx';
 import ExtensionPrompt from './ExtensionPrompt';
@@ -50,6 +51,8 @@ const WorkTunnelHome = () => {
     ? 'todo'
     : location.pathname === '/extensions'
       ? 'dashboard'
+      : location.pathname === '/feature'
+        ? 'DoctorPatientPortal'
       : 'home';
 
   const setCurrentView = (view) => {
@@ -60,6 +63,11 @@ const WorkTunnelHome = () => {
 
     if (view === 'dashboard') {
       navigate('/extensions');
+      return;
+    }
+
+    if (view === 'DoctorPatientPortal') {
+      navigate('/feature');
       return;
     }
 
@@ -94,6 +102,57 @@ const WorkTunnelHome = () => {
   useEffect(() => {
     setIsExtensionPromptOpen(isLoggedIn);
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    const fetchTodoSummary = async () => {
+      if (!isLoggedIn) {
+        setTodos([]);
+        return;
+      }
+
+      try {
+        let registerId = currentUser?.registerId;
+
+        if (!registerId && currentUser?.email) {
+          const usersResponse = await fetch(`${API_BASE_URL}/auth/getAll`);
+          const usersData = await parseApiResponse(usersResponse);
+          if (!usersResponse.ok) throw new Error('Failed to fetch users');
+
+          const users = Array.isArray(usersData) ? usersData : usersData.users || [];
+          const matchedUser = users.find(
+            (user) => String(user.email).trim().toLowerCase() === String(currentUser.email).trim().toLowerCase()
+          );
+          registerId = matchedUser?.registerId || matchedUser?.registerID || matchedUser?.id || matchedUser?.userId;
+        }
+
+        if (!registerId) {
+          setTodos([]);
+          return;
+        }
+
+        const todoResponse = await fetch(`${API_BASE_URL}/api/todo/get/${registerId}`);
+        const todoData = await parseApiResponse(todoResponse);
+        if (!todoResponse.ok) throw new Error('Failed to fetch todos');
+
+        const rawTodos = Array.isArray(todoData)
+          ? todoData
+          : todoData.todos || todoData.data || todoData.list || [];
+
+        const normalizedTodos = rawTodos.map((todo) => ({
+          id: todo.todoID || todo.todoId || todo.id,
+          completed: String(todo.status || 'pending').toLowerCase() === 'done',
+          title: todo.title || '',
+        }));
+
+        setTodos(normalizedTodos);
+      } catch (error) {
+        console.error('Error fetching home todo summary:', error);
+        setTodos([]);
+      }
+    };
+
+    fetchTodoSummary();
+  }, [isLoggedIn, currentUser?.registerId, currentUser?.email]);
 
   // Handlers
   const openLoginModal = () => {
@@ -266,7 +325,7 @@ const sendMessage = async (e) => {
     <>
       <div className="welcome">
         <h1>manage your day today life with me</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+        <p>World Milianios are practicing discipline</p>
         <p className="welcome-rotating-text"><strong>{ROTATING_ITEMS[rotatingItemIndex]}</strong></p>
         <button className="home-ai-btn" onClick={openAiChat}>Ask from AI</button>
       </div>
@@ -330,6 +389,9 @@ const sendMessage = async (e) => {
             )}
             {currentView === 'dashboard' && (
               <ExtensionsView extensions={extensions} installExtension={installExtension} />
+            )}
+            {currentView === 'DoctorPatientPortal' && (
+              <DoctorPatientPortal onBack={() => setCurrentView('home')} />
             )}
           </>
         ) : (

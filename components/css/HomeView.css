@@ -5,12 +5,26 @@
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, var(--primary-dark), var(--primary-light));
-  color: var(--white);
+  background: linear-gradient(135deg, var(--primary-blue), #001233);
+  color: var(--pure-white);
   padding: 2rem;
   border-radius: var(--border-radius);
   margin-bottom: 2rem;
   text-align: center;
+}
+
+.welcome-card .btn-secondary {
+  background: var(--accent-yellow);
+  color: var(--pure-white);
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.welcome-card .btn-secondary:hover {
+  background: #e0a800;
 }
 
 .welcome-card h1 {
@@ -21,6 +35,13 @@
 .welcome-card p {
   font-size: 1.125rem;
   margin-bottom: 1.5rem;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
 }
 
 .stats-grid {
@@ -55,6 +76,99 @@
   font-size: 0.875rem;
 }
 
+.progress-card {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.progress-card h3 {
+  margin: 0 0 1rem;
+  color: var(--primary-dark);
+}
+
+.progress-chart-wrap {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto 1rem;
+}
+
+.progress-donut {
+  display: block;
+}
+
+.progress-donut-track {
+  fill: none;
+  stroke: #e5e7eb;
+}
+
+.progress-donut-segment {
+  fill: none;
+  stroke: var(--accent-yellow);
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.4s ease;
+}
+
+.progress-center-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.progress-percent {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1;
+}
+
+.progress-caption {
+  font-size: 0.8rem;
+  color: var(--gray-800);
+  margin-top: 0.25rem;
+}
+
+.progress-legend {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.45rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--primary-dark);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.legend-dot-completed {
+  background: var(--accent-yellow);
+}
+
+.legend-dot-pending {
+  background: #d1d5db;
+}
+
+.legend-dot-total {
+  background: var(--primary-dark);
+}
+
 .quick-actions {
   background: var(--gray-100);
   padding: 1.5rem;
@@ -70,6 +184,7 @@
   display: inline-block;
   background: var(--white);
   border: none;
+  color: var(--deep-black);
   padding: 0.75rem 1rem;
   margin: 0.5rem;
   border-radius: var(--border-radius);
@@ -82,4 +197,55 @@
   transform: translateY(-2px);
   background: var(--accent);
   color: var(--primary-dark);
+}
+
+@media (max-width: 992px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-view {
+    padding: 1rem 0.75rem;
+  }
+
+  .welcome-card {
+    padding: 1.25rem;
+    text-align: left;
+  }
+
+  .welcome-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-card p {
+    font-size: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card,
+  .progress-card,
+  .quick-actions {
+    padding: 1rem;
+  }
+
+  .quick-btn {
+    width: 100%;
+    margin: 0.4rem 0;
+    text-align: left;
+  }
+
+  .progress-donut {
+    width: 160px;
+    height: 160px;
+  }
 }

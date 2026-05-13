@@ -18,7 +18,9 @@ const Header = ({
     { label: 'Home', view: 'home', onClick: () => setCurrentView('home') },
     { label: '📝 Todo List', view: 'todo', onClick: () => setCurrentView('todo') },
     { label: 'Extensions', view: 'dashboard', onClick: () => setCurrentView('dashboard') },
+      { label: 'Feature', view: 'DoctorPatientPortal', href: '/feature', onClick: () => setCurrentView('DoctorPatientPortal') },
     { label: '🤖 AI Chat', view: 'chat', onClick: openAiChat }
+    
   ] : [
     { label: 'Home', href: '/#' },
     { label: 'About', href: '/#about' },
@@ -29,7 +31,7 @@ const Header = ({
   return (
     <header className="worktunnel-header">
       <div className="header-container">
-        <div className="worktunnel-logo">Work Tunnel</div>
+        <div className="worktunnel-logo">Work Tunnel  </div>
 
         <button className="mobile-menu-toggle" onClick={toggleMobileMenu} aria-label="Toggle menu">
           <span className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}>
@@ -63,7 +65,7 @@ const Header = ({
 
         <div className="header-actions">
           <button className="theme-toggle" onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
-            {theme === 'light' ? '🌙' : '☀️'}
+            
           </button>
 
           {isLoggedIn ? (

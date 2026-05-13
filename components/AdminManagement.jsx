@@ -1,7 +1,6 @@
 // AdminManagement.jsx
 import React, { useState, useEffect } from 'react';
 import './css/AdminManagement.css';
-import AdminNavbar from './AdminNavbar.jsx';
 
 const BASE_URL = "http://localhost:8081/api/admin";
 

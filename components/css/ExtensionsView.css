@@ -43,3 +43,21 @@
   margin-bottom: 1rem;
   color: var(--gray-800);
 }
+
+.extension-install-btn {
+  background: var(--primary-dark);
+  color: var(--white);
+  border: none;
+  border-radius: 999px;
+  padding: 0.65rem 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow);
+}
+
+.extension-install-btn:hover {
+  background: var(--accent);
+  color: var(--primary-dark);
+  transform: translateY(-2px);
+}

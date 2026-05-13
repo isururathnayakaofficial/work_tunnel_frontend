@@ -1,104 +1,209 @@
+/* WorkTunnel.css - Full Stylesheet including Header */
+
+:root {
+  --primary-blue: #002366;
+  --accent-yellow: #FFD700;
+  --pure-white: #FFFFFF;
+  --soft-white: #F8F9FA;
+  --deep-black: #1A1A1A;
+  --text-gray: #4A4A4A;
+  --transition: all 0.3s ease;
+}
+/* --- Gap Fix for Header --- */
+
+.header-container {
+  display: flex;
+  align-items: center;
+  /* Push logo to the left and actions to the right, keeping nav flexible */
+  justify-content: space-between; 
+}
+
+.worktunnel-logo {
+  /* This ensures the logo doesn't shrink and stays on the left */
+  flex-shrink: 0;
+  margin-right: 40px; /* Base gap between Logo and the start of Nav */
+}
+
+.worktunnel-nav {
+  display: flex;
+  gap: 2rem; /* Consistent spacing between each individual nav link */
+  align-items: center;
+  /* This pushes the navigation away from the logo if there is extra space */
+  margin-right: auto; 
+  padding-left: 20px; /* Extra breathing room */
+}
+
+/* Responsive adjustment: Ensure gap doesn't break layout on smaller screens */
+@media (max-width: 1024px) {
+  .worktunnel-logo {
+    margin-right: 20px;
+  }
+  .worktunnel-nav {
+    gap: 1rem;
+  }
+}
+
+/* Ensure the nav links themselves are clearly separated */
+.nav-link, .worktunnel-nav a {
+  padding: 8px 12px;
+  display: inline-block;
+}
+
+/* --- Base Layout --- */
+.worktunnel {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--pure-white);
+  color: var(--deep-black);
+  min-height: 100vh;
+}
+
+.worktunnel-dark {
+  background-color: var(--deep-black);
+  color: var(--pure-white);
+}
+
+/* --- Header Styles --- */
 .worktunnel-header {
-  background: var(--white);
-  box-shadow: var(--shadow);
+  background-color: var(--pure-white);
+  border-bottom: 1px solid #eee;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  padding: 0.75rem 0;
+}
+
+.worktunnel-dark .worktunnel-header {
+  background-color: #111;
+  border-bottom: 1px solid #333;
 }
 
 .header-container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
 }
 
 .worktunnel-logo {
   font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--primary-dark);
+  font-weight: 800;
+  color: var(--primary-blue);
   letter-spacing: -0.5px;
 }
 
+
+
+/* --- Navigation --- */
 .worktunnel-nav {
   display: flex;
   gap: 1.5rem;
   align-items: center;
 }
 
-.worktunnel-nav a,
-.worktunnel-nav .nav-link {
+.worktunnel-nav a, .nav-link {
+  text-decoration: none;
+  color: var(--text-gray);
+  font-weight: 500;
   background: none;
   border: none;
-  font-size: 1rem;
-  color: var(--gray-800);
-  text-decoration: none;
   cursor: pointer;
-  transition: color 0.2s;
-  font-weight: 500;
+  padding: 0.5rem 0;
+  transition: var(--transition);
+  font-size: 1rem;
+  outline: none;
 }
 
-.worktunnel-nav a:hover,
-.worktunnel-nav .nav-link:hover {
-  color: var(--primary-dark);
+.worktunnel-nav a, .nav-link {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.worktunnel-nav .nav-link.active {
-  color: var(--primary-dark);
-  border-bottom: 2px solid var(--accent);
+.worktunnel-nav a:hover, .nav-link:hover {
+  color: var(--primary-blue);
 }
 
+.nav-link.active {
+  color: var(--accent-yellow);
+  font-weight: 600;
+}
+
+.worktunnel-dark .worktunnel-nav a, 
+.worktunnel-dark .nav-link {
+  color: #ccc;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.worktunnel-dark .worktunnel-nav a:hover, 
+.worktunnel-dark .nav-link:hover {
+  color: var(--accent-yellow);
+}
+
+.worktunnel-dark .nav-link.active {
+  color: var(--accent-yellow);
+  font-weight: 600;
+}
+
+/* --- Header Actions (Login, Profile, Theme) --- */
 .header-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
+  margin-left: 2rem;
 }
 
-.theme-toggle,
 .login-btn {
-  background: none;
+  background-color: var(--primary-blue);
+  color: var(--pure-white);
   border: none;
-  font-size: 1.25rem;
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: background 0.2s;
+  transition: var(--transition);
 }
 
-.theme-toggle:hover,
 .login-btn:hover {
-  background: var(--gray-200);
+  background-color: var(--deep-black);
 }
 
-.login-btn {
-  background: var(--primary-dark);
-  color: var(--white);
-  border-radius: var(--border-radius);
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
+.worktunnel-dark .login-btn {
+  background-color: var(--accent-yellow);
+  color: var(--deep-black);
 }
 
+.theme-toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: var(--soft-white);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.worktunnel-dark .theme-toggle {
+  background: #333;
+  border-color: #444;
+}
+
+/* Profile Section */
 .profile-trigger {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  border-radius: 2rem;
-  transition: background 0.2s;
-}
-
-.profile-trigger:hover {
-  background: var(--gray-200);
 }
 
 .profile-avatar {
-  background: var(--primary-dark);
-  color: var(--white);
+  background: var(--primary-blue);
+  color: white;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -106,88 +211,132 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  font-size: 0.8rem;
 }
 
-.profile-username {
-  font-weight: 500;
-  color: var(--gray-800);
-}
-
-/* Mobile menu */
+/* --- Hamburger Mobile Menu --- */
 .mobile-menu-toggle {
   display: none;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
-}
-
-.hamburger {
-  display: block;
-  width: 24px;
-  height: 18px;
-  position: relative;
+  padding: 5px;
 }
 
 .hamburger span {
   display: block;
-  width: 100%;
-  height: 2px;
-  background: var(--gray-800);
-  position: absolute;
-  transition: all 0.3s;
+  width: 25px;
+  height: 3px;
+  background-color: var(--primary-blue);
+  margin: 5px 0;
+  transition: 0.4s;
 }
 
-.hamburger span:nth-child(1) { top: 0; }
-.hamburger span:nth-child(2) { top: 8px; }
-.hamburger span:nth-child(3) { top: 16px; }
-
-.hamburger.active span:nth-child(1) {
-  transform: rotate(45deg);
-  top: 8px;
-}
-.hamburger.active span:nth-child(2) {
-  opacity: 0;
-}
-.hamburger.active span:nth-child(3) {
-  transform: rotate(-45deg);
-  top: 8px;
+.worktunnel-dark .hamburger span {
+  background-color: var(--accent-yellow);
 }
 
+/* Mobile Nav State */
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: block;
+    order: 3;
+    margin-left: auto;
   }
 
   .worktunnel-nav {
-    position: fixed;
-    top: 70px;
+    display: none; /* Hide by default on mobile */
+    position: absolute;
+    top: 100%;
     left: 0;
-    right: 0;
-    background: var(--white);
+    width: 100%;
     flex-direction: column;
-    align-items: stretch;
-    padding: 1rem;
-    gap: 0.5rem;
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-    box-shadow: var(--shadow);
-    z-index: 99;
+    background: var(--pure-white);
+    padding: 1.5rem;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    gap: 1rem;
+    z-index: 999;
+  }
+
+  .worktunnel-dark .worktunnel-nav {
+    background: #111;
   }
 
   .worktunnel-nav.mobile-open {
-    transform: translateX(0);
+    display: flex; /* Show when toggled */
   }
 
-  .worktunnel-nav a,
-  .worktunnel-nav .nav-link {
-    padding: 0.75rem;
-    text-align: center;
-    border-radius: var(--border-radius);
+  .header-actions {
+    order: 3;
   }
+}
 
-  .worktunnel-nav .nav-link.active {
-    border-bottom: none;
-    background: var(--gray-200);
-  }
+/* --- Main Content --- */
+.worktunnel-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Welcome Section */
+.welcome {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #001233 100%);
+  color: white;
+  padding: 4rem 2rem;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.welcome-rotating-text {
+  color: var(--accent-yellow);
+  font-size: 1.5rem;
+  display: block;
+  margin: 1rem 0;
+}
+
+.home-ai-btn {
+  background: var(--accent-yellow);
+  color: var(--deep-black);
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* --- Auth Modal Buttons (Fix for Login/Signup) --- */
+.auth-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.auth-modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Specifically color the login/signup action buttons inside modal */
+.auth-modal-content button[type="submit"], 
+.auth-modal-content .signup-btn {
+  background-color: var(--primary-blue) !important;
+  color: var(--pure-white) !important;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.auth-modal-content button[type="submit"]:hover {
+  background-color: var(--deep-black) !important;
 }
